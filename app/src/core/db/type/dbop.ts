@@ -7,7 +7,7 @@ import {
   Updateable,
 } from "kysely";
 
-export type UserTable = {
+export type UsersTable = {
   id: Generated<number>;
   roleId: number;
   username: string;
@@ -26,10 +26,27 @@ export type UserTable = {
   deletedAt: ColumnType<string | null>;
 };
 
-export type User = Selectable<UserTable>;
-export type NewUser = Insertable<UserTable>;
-export type ModifiedUser = Updateable<UserTable>;
+export type QuotesTable = {
+  id: Generated<number>;
+  userId: number;
+  title: string;
+  description: string;
+
+  // Audit fields
+  createdAt: ColumnType<string | null>;
+  updatedAt: ColumnType<string | null>;
+  deletedAt: ColumnType<string | null>;
+};
+
+export type User = Selectable<UsersTable>;
+export type NewUser = Insertable<UsersTable>;
+export type ModifiedUser = Updateable<UsersTable>;
+
+export type Quote = Selectable<QuotesTable>;
+export type NewQuote = Insertable<QuotesTable>;
+export type ModifiedQuote = Updateable<QuotesTable>;
 
 export type DPOPDatabase = {
-  Users: UserTable;
+  Users: UsersTable;
+  Quotes: QuotesTable;
 };

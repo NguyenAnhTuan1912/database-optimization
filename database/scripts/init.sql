@@ -1,5 +1,7 @@
 -- Create database
-CREATE DATABASE IF NOT EXISTS dbop;
+CREATE DATABASE IF NOT EXISTS dbop
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
 USE dbop;
 
 -- Create tables
@@ -50,9 +52,27 @@ CREATE TABLE IF NOT EXISTS Users (
   `deletedAt` TIMESTAMP DEFAULT NULL,
 
   PRIMARY KEY (`id`)
-);
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS Quotes (
+  `id` INT AUTO_INCREMENT NOT NULL,
+  `userId` INT NOT NULL,
+  `title` VARCHAR(64) NOT NULL,
+  `description` VARCHAR(512) NOT NULL,
+
+  -- Audit fields
+  `createdAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `deletedAt` TIMESTAMP DEFAULT NULL,
+
+  PRIMARY KEY (`id`)
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- Add contraints
 ALTER TABLE Users
 ADD CONSTRAINT fk_users_role
 FOREIGN KEY (`roleId`) REFERENCES Roles(`id`);
+
+ALTER TABLE Quotes
+ADD CONSTRAINT fk_quotes_user
+FOREIGN KEY (`userId`) REFERENCES Users(`id`);

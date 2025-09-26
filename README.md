@@ -18,6 +18,12 @@ Trong bài này thì mình sẽ thực hiện về cách để tối ưu cơ s�
 docker compose up
 ```
 
+Trong trường hợp chạy docker-compose.dev.up, thì cần sẽ phải cấp thêm quyền cho thư mục data.
+
+```bash
+sudo chmod -R 777 data/
+```
+
 Khi đó thì sẽ có 2 containers dược tạo ra và chạy.
 
 ### Seed data
@@ -31,7 +37,7 @@ docker exec -it dbopapp sh
 Chạy script `build/scripts/seed-users.js`.
 
 ```bash
-node build/scripts/seed-users.js
+node build/scripts/seed-quotes.js
 ```
 
 ## Remove
