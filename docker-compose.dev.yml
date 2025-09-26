@@ -1,0 +1,51 @@
+services:
+  app:
+    ports:
+      - "7800:7800"
+    build:
+      dockerfile: dockerfile
+      context: app
+    image: dbop/app
+    container_name: dbopapp
+    depends_on:
+      - db
+    networks:
+      - "test-network"
+    volumes:
+      - "./app/build:/opt/app/build"
+
+  db:
+    ports:
+      - "3306:3306"
+    build:
+      dockerfile: dockerfile
+      context: database
+    image: dbop/db
+    container_name: dbopdb
+    environment:
+      MYSQL_ROOT_PASSWORD: letmein12345
+      MYSQL_DATABASE: dbop
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-u",
+          "root",
+          "-pletmein12345",
+        ]
+      interval: 8s
+      retries: 8
+      start_period: 10s
+      timeout: 15s
+    networks:
+      - "test-network"
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+
+networks:
+  test-network:
+    driver: bridge
