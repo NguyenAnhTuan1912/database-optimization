@@ -8,9 +8,9 @@ import { LoggerBuilder } from "../logger";
 /**
  * A class represents database client instance with Kysely.
  */
-export abstract class DatabaseManager<DB = unknown> {
-  protected dialectInstance!: Dialect;
-  protected client!: Kysely<DB>;
+export abstract class DatabaseManager<TDatabaseClient, TDialect> {
+  protected dialectInstance!: TDialect;
+  protected client!: TDatabaseClient;
 
   protected database!: string;
   protected host!: string;
@@ -88,9 +88,14 @@ export abstract class DatabaseManager<DB = unknown> {
   abstract init(): void;
 
   /**
+   * Connect to database.
+   */
+  abstract connect(): Promise<any>;
+
+  /**
    * @returns instance of database client with Kysely.
    */
-  getClient(): Kysely<DB> {
+  getClient(): TDatabaseClient {
     try {
       if (!this.dialectInstance) {
         const msg = "Dialect of database client is not set";
@@ -99,9 +104,9 @@ export abstract class DatabaseManager<DB = unknown> {
       }
 
       if (!this.client) {
-        this.client = new Kysely<DB>({
-          dialect: this.dialectInstance,
-        });
+        const msg = "Database client is not set";
+        LoggerBuilder.Logger.error(LoggerBuilder.buildNormalLog(msg));
+        throw new Error(msg);
       }
 
       return this.client;

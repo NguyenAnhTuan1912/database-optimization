@@ -1,0 +1,52 @@
+{
+	// Place your global snippets here. Each snippet is defined under a snippet name and has a scope, prefix, body and 
+	// description. Add comma separated ids of the languages where the snippet is applicable in the scope field. If scope 
+	// is left empty or omitted, the snippet gets applied to all languages. The prefix is what is 
+	// used to trigger the snippet and the body will be expanded and inserted. Possible variables are: 
+	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. 
+	// Placeholders with the same ids are connected.
+	// Example:
+	// "Print to console": {
+	// 	"scope": "javascript,typescript",
+	// 	"prefix": "log",
+	// 	"body": [
+	// 		"console.log('$1');",
+	// 		"$2"
+	// 	],
+	// 	"description": "Log output to console"
+	// }
+  "Generate pipeline code": {
+    "scope": "javascript,typescript",
+    "prefix": "pipeline",
+    "body": [
+      "import { Pipeline } from \"../../../context/pipeline\";",
+      "",
+      "// Import errors",
+      "import { ClientError, isStandardError } from \"../../../error\";",
+      "",
+      "// Import functions",
+      "",
+      "// Import schema & validators",
+      "import { createValidationStepExecutor } from \"../../../validation/joi/helper\";",
+      "",
+      "// Import types",
+      "import type { RuntimeContext } from \"../../../context/runtime-context\";",
+      "",
+      "const pipeline = new Pipeline<RuntimeContext>(\"My new Pipeline\");",
+      "",
+      "export { pipeline };"
+    ],
+    "description": "Standard pipeline code"
+  },
+  "Generate function code": {
+    "scope": "javascript,typescript",
+    "prefix": "function",
+    "body": [
+      "// Import types",
+      "import type { RuntimeContext } from \"../../../context/runtime-context\";",
+      "",
+      "export function functionName(ctx: RuntimeContext) {}"
+    ],
+    "description": "Standard function code"
+  },
+}
