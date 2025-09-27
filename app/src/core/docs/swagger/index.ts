@@ -9,10 +9,9 @@ const options = {
   definition: {
     openapi: "3.0.0",
     info: {
-      title: "Cognito Example Application with Typescript",
+      title: "Database Optimization",
       version: "1.0.0",
-      description:
-        "Tài liệu API cho Cognito Example Application with Typescript",
+      description: "Tài liệu API cho Database Optimization",
     },
     components: {
       securitySchemes: {

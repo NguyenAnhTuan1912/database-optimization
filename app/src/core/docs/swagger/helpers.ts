@@ -1,10 +1,7 @@
 // Import types
 import type { Express } from "express";
-import type {
-  TSwaggerRouteDefinition,
-  TSwaggerResponse,
-  TSwaggerSchema,
-} from "./type";
+import type { SwaggerSchema } from "./SwaggerSchema";
+import type { TSwaggerRouteDefinition, TSwaggerResponse } from "./type";
 
 /**
  * Tạo một phản hồi Json.
@@ -15,7 +12,7 @@ import type {
  */
 export function jsonResponse(
   status: string,
-  schema: TSwaggerSchema,
+  schema: SwaggerSchema,
   description = "Success"
 ): Record<string, TSwaggerResponse> {
   return {

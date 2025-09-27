@@ -1,5 +1,5 @@
 import { createPool } from "mysql2";
-import { MysqlDialect } from "kysely";
+import { Kysely, MysqlDialect } from "kysely";
 
 // Import from utils
 import { Configs } from "../../utils/configs";
@@ -8,7 +8,10 @@ import { DatabaseManager } from "../../utils/db/DatabaseManager";
 // Import types
 import type { DPOPDatabase } from "./type/dbop";
 
-export class DBOPManager extends DatabaseManager<DPOPDatabase> {
+export class DBOPManager extends DatabaseManager<
+  Kysely<DPOPDatabase>,
+  MysqlDialect
+> {
   constructor() {
     super(
       Configs.DBOPDatabase,
@@ -34,5 +37,11 @@ export class DBOPManager extends DatabaseManager<DPOPDatabase> {
         connectionLimit: this.connectionLimit,
       }),
     });
+
+    this.client = new Kysely<DPOPDatabase>({
+      dialect: this.dialectInstance,
+    });
   }
+
+  async connect(): Promise<any> {}
 }
