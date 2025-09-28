@@ -1,5 +1,7 @@
 import { Step } from "./Step";
 
+import { isStandardError } from "../../error";
+
 // Import types
 import type { RuntimeContext } from "../runtime-context";
 import type { InternalContext } from "../internal-context";
@@ -24,6 +26,20 @@ export class Pipeline<TContext = RuntimeContext | InternalContext> {
     this.name = name;
     this._steps = [];
     this._runStates = new Map<any, TPipelineRunState>();
+  }
+
+  /**
+   * Process runtime result.
+   *
+   * @param ctx
+   * @returns
+   */
+  static processRuntimeResult(ctx: RuntimeContext) {
+    if (isStandardError(ctx.prevResult)) {
+      return ctx.sendError(ctx.prevResult);
+    }
+
+    return ctx.sendJson(ctx.prevResult);
   }
 
   /**
