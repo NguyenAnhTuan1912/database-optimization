@@ -1,4 +1,5 @@
 import type { TRouteDefinition } from "../../../utils/route-registry/type";
+import type { SwaggerSchema } from "./SwaggerSchema";
 
 export type TSwaggerResponse = {
   description: string;
@@ -9,19 +10,11 @@ export type TSwaggerResponse = {
   };
 };
 
-export type TSwaggerSchema = {
-  type: string;
-  items?: TSwaggerSchema;
-  properties?: {
-    [K: string]: TSwaggerSchema;
-  };
-};
-
 export type TSwaggerParameters = {
   name: string;
   in: string;
   required?: boolean;
-  schema: TSwaggerSchema;
+  schema: SwaggerSchema;
   description?: string;
 };
 
@@ -37,7 +30,7 @@ export type TSwaggerRouteDefinition = TRouteDefinition & {
     required?: boolean;
     content: {
       [contentType: string]: {
-        schema: TSwaggerSchema;
+        schema: SwaggerSchema;
       };
     };
   };

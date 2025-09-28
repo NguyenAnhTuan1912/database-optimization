@@ -40,7 +40,7 @@ export class SwaggerSchema {
    * @returns
    */
   setType(type: string) {
-    if (SwaggerSchema.checkType(type)) {
+    if (!SwaggerSchema.checkType(type)) {
       const msg = `Type [${type}] is invalid. Supported type are ${SwaggerSchema.ValidTypes.join(
         ", "
       )}`;
