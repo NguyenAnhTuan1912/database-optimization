@@ -20,9 +20,27 @@ export class Pagable {
   public page: number;
   public size: number;
 
-  constructor(page: number, size: number) {
-    this.page = page;
-    this.size = size;
+  static DEFAULT_PAGE = 1;
+  static DEFAULT_SIZE = 10;
+
+  constructor(page?: string, size?: string);
+  constructor(page?: number, size?: number);
+  constructor(page?: number | string, size?: number | string) {
+    if (page === undefined || page === null) {
+      this.page = Pagable.DEFAULT_PAGE;
+    } else if (typeof page === "string") {
+      this.page = parseInt(page);
+    } else {
+      this.page = page;
+    }
+
+    if (size === undefined || size === null) {
+      this.size = Pagable.DEFAULT_SIZE;
+    } else if (typeof size === "string") {
+      this.size = parseInt(size);
+    } else {
+      this.size = size;
+    }
   }
 
   /**
