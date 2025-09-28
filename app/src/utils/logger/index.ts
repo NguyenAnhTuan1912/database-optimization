@@ -99,10 +99,14 @@ export class LoggerBuilder {
     if (this.canLogToConsole) {
       this._transports.push(
         new winston.transports.Console({
-          format: combine(
-            label({ label: this.defaultLabel }),
-            timestamp(),
-            stringFormat
+          format: winston.format.combine(
+            winston.format.timestamp(),
+            winston.format.errors({ stack: true }), // để log cả stack trace
+            winston.format.printf(({ level, message, timestamp, ...meta }) => {
+              return `${timestamp} [${level}]: ${message} ${
+                Object.keys(meta).length ? JSON.stringify(meta, null, 2) : ""
+              }`;
+            })
           ),
         })
       );
