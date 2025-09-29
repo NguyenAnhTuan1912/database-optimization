@@ -4,13 +4,13 @@ import { KyselyBaseDAO } from "../../../db/KyselyDAO";
 import { DBOPManager } from "../../../db/DBOPManager";
 
 import type { IDAOKysely } from "../../../db/KyselyDAO";
-import type { DPOPDatabase, QuotesTable } from "../../../db/type/dbop";
+import type { DPOPDatabase, UsersTable } from "../../../db/type/dbop";
 
-export class QuoteDAO extends KyselyBaseDAO<DPOPDatabase, "Quotes"> {
+export class UserDAO extends KyselyBaseDAO<DPOPDatabase, "Users"> {
   constructor(dbClient = new DBOPManager().getClient()) {
-    super(dbClient, "Quotes");
+    super(dbClient, "Users");
 
-    this.singularEntityName = "quote";
-    this.pluralEntityName = "quotes";
+    this.singularEntityName = "user";
+    this.pluralEntityName = "users";
   }
 }

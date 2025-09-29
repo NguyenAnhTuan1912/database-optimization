@@ -11,6 +11,7 @@ import { registerRoutes } from "../../core/docs/swagger/helpers.js";
 
 // Import routes
 import { quotesRoutes } from "./routes/quotes/index.js";
+import { usersRoutes } from "./routes/users/index.js";
 // import { authRoutes } from "./routes/auth/index.js";
 // import { pcustomersRoutes } from "./routes/pcustomer-management";
 
@@ -27,6 +28,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Register routes
 registerRoutes(app, quotesRoutes, swaggerDoc);
+registerRoutes(app, usersRoutes, swaggerDoc);
 // registerRoutes(app, authRoutes, swaggerDoc);
 // registerRoutes(app, pcustomersRoutes, swaggerDoc);
 
