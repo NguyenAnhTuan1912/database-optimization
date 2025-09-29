@@ -47,4 +47,4 @@ WHERE u.id = 3 AND q.deleted IS FALSE;
 SELECT q.id, q.userId, q.title, q.description, u.username, u.fullName
 FROM Quotes as q
 	LEFT JOIN Users as u ON u.id = q.userId
-WHERE q.id = 42832 AND q.deleted IS FALSE;
+WHERE q.id = 87372 AND q.deleted IS FALSE;
