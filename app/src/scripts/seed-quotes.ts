@@ -19,7 +19,7 @@ function truncate(str: string, max: number) {
 async function seed() {
   let quotes: Array<NewQuote> = [];
 
-  const N = 10000;
+  const N = 100000;
 
   console.log("Start seed quotes");
   for (let i = 1; i <= N; i++) {
@@ -40,7 +40,13 @@ async function seed() {
     }
   }
   console.log("Seed %d quotes done", N);
-  client.destroy();
+  await client.destroy();
 }
 
-seed();
+seed()
+  .then(() => {
+    console.log("Seeding complete. Exiting...");
+  })
+  .catch((err) => {
+    console.error("Error during seeding:", err);
+  });

@@ -2,10 +2,13 @@
 import { AppError } from "../error";
 import { Page } from "./Pagable";
 import { KyselyQueryMapper } from "./KyselyQueryMapper";
+import { AppInsertResult } from "./AppInsertResult";
+import { AppUpdateResult } from "./AppUpdateResult";
 
 // Import utils
 import { formatTimestampForMySQL } from "../../utils/db/helper";
 import { LoggerBuilder } from "../../utils/logger";
+import { toNumber } from "../../utils/number";
 
 // Import types
 import type {
@@ -15,11 +18,9 @@ import type {
   Updateable,
   InsertResult,
   UpdateResult,
-  TableExpressionOrList,
-  TableExpression,
 } from "kysely";
-import type { Pagable } from "./Pagable";
-import type { Query } from "./Query";
+import { Pagable } from "./Pagable";
+import { Filter, Query } from "./Query";
 import type { QueryOptions } from "./QueryOptions";
 
 export interface IDAOKysely<Table = any> {
@@ -72,7 +73,7 @@ export interface IDAOKysely<Table = any> {
   insert?(
     items: Array<Insertable<Table>>,
     options?: QueryOptions
-  ): Promise<Array<InsertResult> | undefined>;
+  ): Promise<Array<Selectable<Table>> | undefined>;
 
   /**
    * Update a record in database.
@@ -85,7 +86,7 @@ export interface IDAOKysely<Table = any> {
     query: Query,
     items: Updateable<Table>,
     options?: QueryOptions
-  ): Promise<Array<UpdateResult> | undefined>;
+  ): Promise<Selectable<Table> | undefined>;
 
   /**
    * Delete one or multiple records in database.
@@ -113,6 +114,33 @@ export abstract class KyselyBaseDAO<
     this.queryMapper = new KyselyQueryMapper();
   }
 
+  /**
+   * Re-make insert result.
+   *
+   * @param result
+   * @returns
+   */
+  static remakeInsertResult(result: InsertResult) {
+    return new AppInsertResult(
+      result.insertId,
+      toNumber(result.numInsertedOrUpdatedRows)
+    );
+  }
+
+  /**
+   * Re-make update result.
+   *
+   * @param result
+   * @returns
+   */
+  static remakeUpdateResult(updateId: any, result: UpdateResult) {
+    return new AppUpdateResult(
+      updateId,
+      toNumber(result.numUpdatedRows),
+      toNumber(result.numChangedRows)
+    );
+  }
+
   async count(): Promise<number> {
     try {
       let queryBuilder = this.dbClient.selectFrom(this.tableName as any);
@@ -132,8 +160,6 @@ export abstract class KyselyBaseDAO<
     try {
       let qb = this.dbClient.selectFrom(this.tableName as any).selectAll();
       qb = this.queryMapper.processFilters(qb, query);
-
-      console.log("SQL:", qb.compile().sql);
 
       const result = await qb.executeTakeFirstOrThrow();
 
@@ -209,9 +235,19 @@ export abstract class KyselyBaseDAO<
     try {
       let qb = this.dbClient.insertInto(this.tableName as any).values(items);
 
-      const result = await qb.returningAll().execute();
+      const result = await qb.execute();
 
-      return result as unknown as Promise<Array<InsertResult>>;
+      let inqb = this.dbClient.selectFrom(this.tableName as any);
+      let selectQuery = new Query();
+
+      selectQuery.addFilter(
+        new Filter().consider("id").in(result.map((r) => r.insertId))
+      );
+      inqb = this.queryMapper.processFilters(inqb, selectQuery).selectAll();
+
+      const newData = await inqb.execute();
+
+      return newData as unknown as Promise<Array<Selectable<DB[TableName]>>>;
     } catch (error: any) {
       const msg = `Cannot insert ${this.singularEntityName}.`;
 
@@ -238,9 +274,13 @@ export abstract class KyselyBaseDAO<
 
       qb = (qb as any).set(item);
 
-      const result = await qb.returningAll().executeTakeFirstOrThrow();
+      await qb.executeTakeFirstOrThrow();
+      const updatedData = await this.queryMapper
+        .processFilters(this.dbClient.selectFrom(this.tableName as any), query)
+        .selectAll()
+        .executeTakeFirstOrThrow();
 
-      return result as unknown as Promise<Array<UpdateResult>>;
+      return updatedData as unknown as Promise<Selectable<DB[TableName]>>;
     } catch (error: any) {
       const msg = `Cannot update ${this.singularEntityName}.`;
 

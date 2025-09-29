@@ -8,7 +8,7 @@ import {
 import { QueryMapper } from "./QueryMapper";
 
 // Import types
-import type { WhereCapableBuilder } from "./type/general";
+import type { TWhereCapableBuilder } from "./type/general";
 
 export class KyselyQueryMapper<DB = any> extends QueryMapper {
   constructor() {

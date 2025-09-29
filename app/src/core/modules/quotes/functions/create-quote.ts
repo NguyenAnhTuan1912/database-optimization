@@ -1,5 +1,8 @@
 import { QuoteDAO } from "../data-model/dao";
 
+// Import utils
+import { toNumber } from "../../../../utils/number";
+
 // Import types
 import type { RuntimeContext } from "../../../context/runtime-context";
 
@@ -16,7 +19,9 @@ export async function createQuote(ctx: RuntimeContext) {
 
   const result = await dao.insert([body]);
 
-  if (result) return result[0];
+  if (result) {
+    return result[0];
+  }
 
   return result;
 }

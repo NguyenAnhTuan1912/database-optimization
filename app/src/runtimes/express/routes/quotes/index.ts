@@ -9,6 +9,7 @@ import {
   quotesDescriptiveObject,
   updateQuoteDescriptiveObject,
 } from "../../../../core/modules/quotes/data-model/schema";
+import { insertResultDescriptiveObject } from "../../../../core/db/schema";
 
 // Import pipelines
 import {
