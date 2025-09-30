@@ -14,6 +14,17 @@ const options = {
       description: "Tài liệu API cho Database Optimization",
     },
     components: {
+      parameters: {
+        XUserIdHeader: {
+          name: "X-User-Id",
+          in: "header",
+          required: false,
+          schema: {
+            type: "number",
+          },
+          description: "Id of user",
+        },
+      },
       securitySchemes: {
         bearerAuth: {
           type: "http",

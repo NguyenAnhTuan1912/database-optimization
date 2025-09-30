@@ -10,13 +10,17 @@ export type TSwaggerResponse = {
   };
 };
 
-export type TSwaggerParameters = {
-  name: string;
-  in: string;
-  required?: boolean;
-  schema: SwaggerSchema;
-  description?: string;
-};
+export type TSwaggerParameters =
+  | {
+      name: string;
+      in: string;
+      required?: boolean;
+      schema: SwaggerSchema;
+      description?: string;
+    }
+  | {
+      $ref?: string;
+    };
 
 export type TSwaggerRouteDefinition = TRouteDefinition & {
   security?: {
