@@ -1,5 +1,3 @@
-import { Kysely, Dialect } from "kysely";
-
 import { AppError } from "../../core/error";
 
 // Import utils
@@ -31,6 +29,16 @@ export abstract class DatabaseManager<TDatabaseClient, TDialect> {
     this.init();
   }
 
+  /**
+   * Save configuration for database client.
+   *
+   * @param database
+   * @param host
+   * @param port
+   * @param user
+   * @param password
+   * @param connectionLimit
+   */
   config(
     database?: string,
     host?: string,
@@ -93,24 +101,23 @@ export abstract class DatabaseManager<TDatabaseClient, TDialect> {
   abstract connect(): Promise<any>;
 
   /**
-   * @returns instance of database client with Kysely.
+   * @returns instance of database client.
    */
   getClient(): TDatabaseClient {
     try {
       if (!this.dialectInstance) {
         const msg = "Dialect of database client is not set";
-        LoggerBuilder.Logger.error(LoggerBuilder.buildNormalLog(msg));
         throw new Error(msg);
       }
 
       if (!this.client) {
         const msg = "Database client is not set";
-        LoggerBuilder.Logger.error(LoggerBuilder.buildNormalLog(msg));
         throw new Error(msg);
       }
 
       return this.client;
     } catch (error: any) {
+      LoggerBuilder.Logger.error(LoggerBuilder.buildNormalLog(error.message));
       throw new AppError(error.message);
     }
   }
