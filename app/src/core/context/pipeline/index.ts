@@ -1,10 +1,11 @@
+import { Context } from "../context/Context";
 import { Step } from "./Step";
 
-import { isStandardError } from "../../error";
+import { AppError, isStandardError } from "../../error";
 
 // Import types
-import type { RuntimeContext } from "../runtime-context";
-import type { InternalContext } from "../internal-context";
+import { RuntimeContext } from "../runtime-context";
+import { InternalContext } from "../internal-context";
 import type { TStepExecutor } from "./Step";
 import type { TPipelineRunState } from "./type";
 
@@ -16,16 +17,14 @@ import type { TPipelineRunState } from "./type";
  * thì kết quả đó sẽ được hiểu là params cho step tiếp theo.
  * Chính vì thế, khi sử dụng pipeline trong core thì mình phải lưu ý.
  */
-export class Pipeline<TContext = RuntimeContext | InternalContext> {
+export class Pipeline<TContext extends Context = any> {
   public name: string;
 
   private _steps: Array<Step<TContext, unknown>>;
-  private _runStates: Map<any, TPipelineRunState>;
 
   constructor(name: string) {
     this.name = name;
     this._steps = [];
-    this._runStates = new Map<any, TPipelineRunState>();
   }
 
   /**
@@ -40,6 +39,26 @@ export class Pipeline<TContext = RuntimeContext | InternalContext> {
     }
 
     return ctx.sendJson(ctx.prevResult);
+  }
+
+  /**
+   * Process error in context.
+   *
+   * @param ctx
+   * @param error
+   * @returns
+   */
+  static processError(ctx: Context, error: any) {
+    if (error instanceof Error) {
+      error = new AppError(error.message).asHTTPError("InternalServerError");
+      (ctx as any)["prevResult"] = error;
+    }
+
+    if (ctx instanceof RuntimeContext) {
+      return Pipeline.processRuntimeResult(ctx);
+    }
+
+    ctx.stop();
   }
 
   /**
@@ -66,44 +85,38 @@ export class Pipeline<TContext = RuntimeContext | InternalContext> {
   }
 
   /**
-   * Cho phép dừng pipeline sau sau một step, mà step này gọi stop().
-   */
-  stop(ctx: TContext) {
-    let currState = this._runStates.get(ctx);
-
-    if (!currState) return;
-
-    currState.canStopNow = true;
-  }
-
-  /**
    * Chạy pipeline theo context được truyền vào.
    */
   async run(ctx: TContext) {
     let currentResult: any;
 
-    this._runStates.set(ctx, { currentStep: 0, canStopNow: false });
-
     for (const step of this._steps) {
       let maybePromise = step.execute(ctx);
 
-      if (maybePromise instanceof Promise) {
-        currentResult = await maybePromise;
-      } else {
-        currentResult = maybePromise;
+      try {
+        if (maybePromise instanceof Promise) {
+          currentResult = await maybePromise;
+        } else {
+          currentResult = maybePromise;
+        }
+      } catch (error: any) {
+        // Stop run
+        if (error instanceof Error || error instanceof AppError) {
+          Pipeline.processError(ctx, error);
+        }
+        return;
       }
 
       (ctx as any)["prevResult"] = currentResult;
 
+      // Stop run
+      if (currentResult instanceof Error || currentResult instanceof AppError) {
+        Pipeline.processError(ctx, currentResult);
+      }
+
       // Process post step execution
-      if (this._runStates.get(ctx)!.canStopNow) break;
-
-      // Update state
-      this._runStates.get(ctx)!.currentStep += 1;
+      if (ctx.canStop) break;
     }
-
-    // Clear state
-    this._runStates.delete(ctx);
 
     return currentResult;
   }

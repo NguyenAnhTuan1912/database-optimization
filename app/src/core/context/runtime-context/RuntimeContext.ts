@@ -1,3 +1,5 @@
+import { Context } from "../context/Context";
+
 import type { Readable } from "stream";
 import type { AppError, ClientError } from "../../error";
 
@@ -16,7 +18,7 @@ import type { AppError, ClientError } from "../../error";
  *
  * Ngoài ra thì còn có một số hàm khác nữa.
  */
-export abstract class RuntimeContext {
+export abstract class RuntimeContext extends Context {
   /** Name of runtime */
   public runtime: string;
 
@@ -25,9 +27,24 @@ export abstract class RuntimeContext {
    */
   public prevResult?: any;
 
+  /**
+   * Cho biết là có thể dùng context này hay không?
+   */
+  public canStop!: boolean;
+
   constructor() {
+    super();
+
     this.runtime = "";
     this.prevResult = undefined;
+    this.canStop = false;
+  }
+
+  /**
+   * Dừng việc thực thi context lại.
+   */
+  stop() {
+    this.canStop = true;
   }
 
   /**
@@ -38,7 +55,8 @@ export abstract class RuntimeContext {
    */
   abstract setHTTPStatus(status: number): void;
 
-  /**   * Lấy body trong HTTP Request (Payload), nếu request có body.
+  /**
+   * Lấy body trong HTTP Request (Payload), nếu request có body.
    *
    * @abstract
    * @returns

@@ -1,9 +1,11 @@
+import { Context } from "../context/Context";
+
 import type { RuntimeContext } from "../runtime-context/RuntimeContext";
 
 /**
  * Lớp đại diện cho internal context.
  */
-export class InternalContext<TParams = unknown> {
+export class InternalContext<TParams = unknown> extends Context {
   /**
    * Tham số chính của hàm/module.
    */
@@ -22,7 +24,7 @@ export class InternalContext<TParams = unknown> {
   /**
    * Một số các tham số thêm cho hàm/module để xử lý.
    */
-  options?: {
+  public options?: {
     /**
      * Cho biết là context ở ngoài hàm/module này có thể bắt được lỗi hay không?
      * Nếu không thì mình phải xử lý dữ liệu rồi trả về undefined hoặc null
@@ -32,8 +34,11 @@ export class InternalContext<TParams = unknown> {
   } & Record<string, any>;
 
   constructor() {
+    super();
+
     this.params = {};
     this.runtimeCtx = undefined;
+
     this.options = {
       canCatchError: false,
     };
