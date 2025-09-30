@@ -10,6 +10,7 @@ import { paginateUsers } from "../functions/paginate-users";
 import { createUser } from "../functions/create-user";
 import { updateUser } from "../functions/update-user";
 import { deleteUser } from "../functions/delete-user";
+import { checkUserIdInHeader } from "../../auth/functions/checkUserIdInHeader";
 
 // Import schema & validators
 import { createValidationStepExecutor } from "../../../validation/joi/helper";
@@ -43,14 +44,27 @@ export const deleteUserPipeline = new Pipeline<RuntimeContext>(
 
 countUsersPipeline.addStep(count).addStep(Pipeline.processRuntimeResult);
 
-getUserPipeline.addStep(getUser).addStep(Pipeline.processRuntimeResult);
+getUserPipeline
+  .addStep(checkUserIdInHeader)
+  .addStep(getUser)
+  .addStep(Pipeline.processRuntimeResult);
 
 paginateUserPipeline
+  .addStep(checkUserIdInHeader)
   .addStep(paginateUsers)
   .addStep(Pipeline.processRuntimeResult);
 
-createUserPipeline.addStep(createUser).addStep(Pipeline.processRuntimeResult);
+createUserPipeline
+  .addStep(checkUserIdInHeader)
+  .addStep(createUser)
+  .addStep(Pipeline.processRuntimeResult);
 
-updateUserPipeline.addStep(updateUser).addStep(Pipeline.processRuntimeResult);
+updateUserPipeline
+  .addStep(checkUserIdInHeader)
+  .addStep(updateUser)
+  .addStep(Pipeline.processRuntimeResult);
 
-deleteUserPipeline.addStep(deleteUser).addStep(Pipeline.processRuntimeResult);
+deleteUserPipeline
+  .addStep(checkUserIdInHeader)
+  .addStep(deleteUser)
+  .addStep(Pipeline.processRuntimeResult);

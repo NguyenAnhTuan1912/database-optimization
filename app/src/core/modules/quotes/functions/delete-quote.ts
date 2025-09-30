@@ -17,8 +17,10 @@ export async function deleteQuote(ctx: RuntimeContext) {
   const dao = new QuoteDAO();
   const deleteQuery = new Query();
 
-  if (params.id) {
-    deleteQuery.addFilter(Query.createFilter().consider("id").equal(params.id));
+  if (params.quoteId) {
+    deleteQuery.addFilter(
+      Query.createFilter().consider("id").equal(params.quoteId)
+    );
   }
 
   const result = await dao.delete(deleteQuery);

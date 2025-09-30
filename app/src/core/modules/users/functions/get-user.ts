@@ -17,10 +17,6 @@ export async function getUser(ctx: RuntimeContext) {
   const dao = new UserDAO();
   const selectQuery = new Query();
 
-  if (params.id) {
-    selectQuery.addFilter(Query.createFilter().consider("id").equal(params.id));
-  }
-
   if (query.userId) {
     selectQuery.addFilter(
       Query.createFilter().consider("userId").equal(query.userId)

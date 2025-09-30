@@ -17,8 +17,10 @@ export async function getQuote(ctx: RuntimeContext) {
   const dao = new QuoteDAO();
   const selectQuery = new Query();
 
-  if (params.id) {
-    selectQuery.addFilter(Query.createFilter().consider("id").equal(params.id));
+  if (params.quoteId) {
+    selectQuery.addFilter(
+      Query.createFilter().consider("id").equal(params.quoteId)
+    );
   }
 
   if (query.userId) {

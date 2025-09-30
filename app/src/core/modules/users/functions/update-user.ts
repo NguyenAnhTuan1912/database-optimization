@@ -18,8 +18,10 @@ export async function updateUser(ctx: RuntimeContext) {
   const dao = new UserDAO();
   const updateQuery = new Query();
 
-  if (params.id) {
-    updateQuery.addFilter(Query.createFilter().consider("id").equal(params.id));
+  if (params.userId) {
+    updateQuery.addFilter(
+      Query.createFilter().consider("id").equal(params.userId)
+    );
   }
 
   const result = await dao.update(updateQuery, body);

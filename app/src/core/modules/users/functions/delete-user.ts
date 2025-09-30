@@ -17,8 +17,10 @@ export async function deleteUser(ctx: RuntimeContext) {
   const dao = new UserDAO();
   const deleteQuery = new Query();
 
-  if (params.id) {
-    deleteQuery.addFilter(Query.createFilter().consider("id").equal(params.id));
+  if (params.userId) {
+    deleteQuery.addFilter(
+      Query.createFilter().consider("id").equal(params.userId)
+    );
   }
 
   const result = await dao.delete(deleteQuery);

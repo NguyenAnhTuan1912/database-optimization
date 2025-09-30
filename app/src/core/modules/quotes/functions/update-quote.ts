@@ -18,8 +18,10 @@ export async function updateQuote(ctx: RuntimeContext) {
   const dao = new QuoteDAO();
   const updateQuery = new Query();
 
-  if (params.id) {
-    updateQuery.addFilter(Query.createFilter().consider("id").equal(params.id));
+  if (params.quoteId) {
+    updateQuery.addFilter(
+      Query.createFilter().consider("id").equal(params.quoteId)
+    );
   }
 
   const result = await dao.update(updateQuery, body);
