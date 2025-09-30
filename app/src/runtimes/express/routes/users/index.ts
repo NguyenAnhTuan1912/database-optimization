@@ -61,6 +61,9 @@ export const usersRoutes: Array<TSwaggerRouteDefinition> = [
     tags: [usersTag],
     parameters: [
       {
+        $ref: "#/components/parameters/XUserIdHeader",
+      },
+      {
         name: "page",
         in: "query",
         required: false,
@@ -86,7 +89,7 @@ export const usersRoutes: Array<TSwaggerRouteDefinition> = [
   },
   {
     method: "get",
-    path: "/users/:id",
+    path: "/users/:userId",
     handler: async (req, res, next) => {
       const ctx = new ExpressRuntimeContext(req, res, next);
       return await getUserPipeline.run(ctx);
@@ -96,7 +99,10 @@ export const usersRoutes: Array<TSwaggerRouteDefinition> = [
     tags: [usersTag],
     parameters: [
       {
-        name: "id",
+        $ref: "#/components/parameters/XUserIdHeader",
+      },
+      {
+        name: "userId",
         in: "path",
         required: false,
         schema: new SwaggerSchema().setType("number"),
@@ -122,7 +128,11 @@ export const usersRoutes: Array<TSwaggerRouteDefinition> = [
     summary: "Tạo user",
     description: "Tạo và thêm một user mới vào trong cơ sở dữ liệu",
     tags: [usersTag],
-    parameters: [],
+    parameters: [
+      {
+        $ref: "#/components/parameters/XUserIdHeader",
+      },
+    ],
     requestBody: {
       required: true,
       content: {
@@ -142,7 +152,7 @@ export const usersRoutes: Array<TSwaggerRouteDefinition> = [
   },
   {
     method: "patch",
-    path: "/users/:id",
+    path: "/users/:userId",
     handler: async (req, res, next) => {
       const ctx = new ExpressRuntimeContext(req, res, next);
       return await updateUserPipeline.run(ctx);
@@ -152,7 +162,10 @@ export const usersRoutes: Array<TSwaggerRouteDefinition> = [
     tags: [usersTag],
     parameters: [
       {
-        name: "id",
+        $ref: "#/components/parameters/XUserIdHeader",
+      },
+      {
+        name: "userId",
         in: "path",
         required: false,
         schema: new SwaggerSchema().setType("number"),
@@ -178,7 +191,7 @@ export const usersRoutes: Array<TSwaggerRouteDefinition> = [
   },
   {
     method: "delete",
-    path: "/users/:id",
+    path: "/users/:userId",
     handler: async (req, res, next) => {
       const ctx = new ExpressRuntimeContext(req, res, next);
       return await deleteUserPipeline.run(ctx);
@@ -188,7 +201,10 @@ export const usersRoutes: Array<TSwaggerRouteDefinition> = [
     tags: [usersTag],
     parameters: [
       {
-        name: "id",
+        $ref: "#/components/parameters/XUserIdHeader",
+      },
+      {
+        name: "userId",
         in: "path",
         required: false,
         schema: new SwaggerSchema().setType("number"),

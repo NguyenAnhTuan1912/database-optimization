@@ -1,3 +1,5 @@
+USE dbop;
+
 -- Show table status
 SHOW TABLE STATUS;
 

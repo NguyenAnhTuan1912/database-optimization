@@ -57,7 +57,7 @@ export class ClientError extends AppError {
       message,
       HTTPClientErrorDict.BadRequest.Status,
       HTTPClientErrorDict.BadRequest.Code,
-      details,
+      details
     );
   }
 
@@ -69,6 +69,8 @@ export class ClientError extends AppError {
   asHTTPError(name: string) {
     this.statusCode = HTTPClientErrorDict[name as UHTTPClientErrorType].Status;
     this.code = HTTPClientErrorDict[name as UHTTPClientErrorType].Code;
+
+    return this;
   }
 
   /**

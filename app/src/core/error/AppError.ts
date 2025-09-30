@@ -80,6 +80,8 @@ export class AppError extends Error {
     } else {
       this.details.reasons?.push(detail);
     }
+
+    return this;
   }
 
   /**
@@ -90,6 +92,8 @@ export class AppError extends Error {
   asHTTPError(name: string) {
     this.statusCode = HTTPServerErrorDict[name as UHTTPServerErrorType].Status;
     this.code = HTTPServerErrorDict[name as UHTTPServerErrorType].Code;
+
+    return this;
   }
 
   /**

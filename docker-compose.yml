@@ -9,6 +9,7 @@ services:
     container_name: dbopapp
     depends_on:
       - db
+      - memdb
     networks:
       - "test-network"
 
@@ -41,6 +42,20 @@ services:
       timeout: 15s
     networks:
       - "test-network"
+
+  memdb:
+    image: redis:7.2
+    container_name: dbopmemdb
+    ports:
+      - "6379:6379"
+    networks:
+      - "test-network"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 networks:
   test-network:

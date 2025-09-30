@@ -61,6 +61,9 @@ export const quotesRoutes: Array<TSwaggerRouteDefinition> = [
     tags: [quotesTag],
     parameters: [
       {
+        $ref: "#/components/parameters/XUserIdHeader",
+      },
+      {
         name: "page",
         in: "query",
         required: false,
@@ -86,7 +89,7 @@ export const quotesRoutes: Array<TSwaggerRouteDefinition> = [
   },
   {
     method: "get",
-    path: "/quotes/:id",
+    path: "/quotes/:quoteId",
     handler: async (req, res, next) => {
       const ctx = new ExpressRuntimeContext(req, res, next);
       return await getQuotePipeline.run(ctx);
@@ -96,7 +99,10 @@ export const quotesRoutes: Array<TSwaggerRouteDefinition> = [
     tags: [quotesTag],
     parameters: [
       {
-        name: "id",
+        $ref: "#/components/parameters/XUserIdHeader",
+      },
+      {
+        name: "quoteId",
         in: "path",
         required: false,
         schema: new SwaggerSchema().setType("number"),
@@ -122,7 +128,11 @@ export const quotesRoutes: Array<TSwaggerRouteDefinition> = [
     summary: "Tạo quote",
     description: "Tạo và thêm một quote mới vào trong cơ sở dữ liệu",
     tags: [quotesTag],
-    parameters: [],
+    parameters: [
+      {
+        $ref: "#/components/parameters/XUserIdHeader",
+      },
+    ],
     requestBody: {
       required: true,
       content: {
@@ -142,7 +152,7 @@ export const quotesRoutes: Array<TSwaggerRouteDefinition> = [
   },
   {
     method: "patch",
-    path: "/quotes/:id",
+    path: "/quotes/:quoteId",
     handler: async (req, res, next) => {
       const ctx = new ExpressRuntimeContext(req, res, next);
       return await updateQuotePipeline.run(ctx);
@@ -152,7 +162,10 @@ export const quotesRoutes: Array<TSwaggerRouteDefinition> = [
     tags: [quotesTag],
     parameters: [
       {
-        name: "id",
+        $ref: "#/components/parameters/XUserIdHeader",
+      },
+      {
+        name: "quoteId",
         in: "path",
         required: false,
         schema: new SwaggerSchema().setType("number"),
@@ -178,7 +191,7 @@ export const quotesRoutes: Array<TSwaggerRouteDefinition> = [
   },
   {
     method: "delete",
-    path: "/quotes/:id",
+    path: "/quotes/:quoteId",
     handler: async (req, res, next) => {
       const ctx = new ExpressRuntimeContext(req, res, next);
       return await deleteQuotePipeline.run(ctx);
@@ -188,7 +201,10 @@ export const quotesRoutes: Array<TSwaggerRouteDefinition> = [
     tags: [quotesTag],
     parameters: [
       {
-        name: "id",
+        $ref: "#/components/parameters/XUserIdHeader",
+      },
+      {
+        name: "quoteId",
         in: "path",
         required: false,
         schema: new SwaggerSchema().setType("number"),

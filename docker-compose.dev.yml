@@ -46,6 +46,20 @@ services:
     volumes:
       - ./data/mysql:/var/lib/mysql
 
+  memdb:
+    image: redis:7.2
+    container_name: dbopmemdb
+    ports:
+      - "6379:6379"
+    networks:
+      - "test-network"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 networks:
   test-network:
     driver: bridge

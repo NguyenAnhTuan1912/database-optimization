@@ -48,3 +48,30 @@ SELECT q.id, q.userId, q.title, q.description, u.username, u.fullName
 FROM Quotes as q
 	LEFT JOIN Users as u ON u.id = q.userId
 WHERE q.id = 87372 AND q.deleted IS FALSE;
+
+-- JOINS
+
+SELECT q.id, q.userId, q.title, q.description, u.username, u.fullName
+FROM Quotes as q
+	JOIN Users as u ON u.id = q.userId
+WHERE q.id = 87372 AND q.deleted IS FALSE;
+
+SELECT q.id, q.userId, q.title, q.description, u.username, u.fullName
+FROM Quotes as q
+	LEFT JOIN Users as u ON u.id = q.userId
+WHERE q.id = 87372 AND q.deleted IS FALSE;
+
+SELECT q.id, q.userId, q.title, q.description, u.username, u.fullName
+FROM Quotes as q
+	RIGHT JOIN Users as u ON u.id = q.userId
+WHERE q.id = 87372 AND q.deleted IS FALSE;
+
+SELECT q.id, q.userId, q.title, q.description, u.username, u.fullName
+FROM Quotes as q
+	INNER JOIN Users as u ON u.id = q.userId
+WHERE q.id = 87372 AND q.deleted IS FALSE;
+
+SELECT q.id, q.userId, q.title, q.description, u.username, u.fullName
+FROM Quotes as q
+	CROSS JOIN Users as u ON u.id = q.userId
+WHERE q.id = 87372 AND q.deleted IS FALSE;

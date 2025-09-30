@@ -14,17 +14,14 @@ import type { RuntimeContext } from "../../context/runtime-context";
  *
  * @returns
  */
-export function createValidationStepExecutor(
-  pipeline: Pipeline<any>,
-  schema: ObjectSchema,
-) {
+export function createValidationStepExecutor(schema: ObjectSchema) {
   return async function (ctx: RuntimeContext) {
     const body = await ctx.getBody();
     const validated = schema.validate(body);
 
     if (validated.error) {
       // Stop pipeline
-      pipeline.stop(ctx);
+      ctx.stop();
 
       const err = new ClientError(validated.error.message);
 
