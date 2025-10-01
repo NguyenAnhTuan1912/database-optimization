@@ -74,7 +74,10 @@ Một số lưu ý mà mình rút ra được khi làm bài này. Xem xét chủ
   <figcaption>Kiểm tra hiệu năng yêu cầu lấy nhiều bảng ghi với 10 lần thử.</figcaption>
 </figure>
 
+7. Mình phát hiện ra một điều thú vị là ứng dụng của mình có thể chịu được 100 người dùng đồng thời trong vòng 1 giây. Nhưng 1000 users thì không chịu được. Nên mình có thử dùng cache, thì kết quả là nó xuất xắc chịu được 1000 người dùng đồng thời trong 1 giây, vấn đề này tạm thời có thể giải quyết được. Nhưng còn vấn đề (PROBLEM 3) thì vẫn chưa.
+
 ## Problems
 
 - PROBLEM 1: với những nghiệp vụ mà yêu cầu đếm số các bảng ghi ở trong bảng, thì việc mà mình truy vấn `SELECT COUNT` là một điều không nên, vì nó sẽ làm chậm đi tổng thời gian xử lý yêu cầu từ Client. Và từ đây cũng sinh ra thêm một vấn đề nữa (PROBLEM 2).
 - PROBLEM 2: để giải quyết PROBLEM 1 thì mình có thể dùng Redis để lưu lại thông tin này, nhưng vấn đề ở đây là mình sẽ cần phải luôn đồng bộ được số đến trong Redis với số đến thực tế mà bảng có... Có thể dùng cronjob để query 1 phút / lần và cập nhật lại vào trong redis ? Một khi insert thì cập nhập số đếm trong Redis ? Tạo thêm một table cho biến đếm và trigger cập nhật table đó ? Nhìn chung thì những cách này nó vẫn gây ra vấn đề không đồng nhất dữ liệu.
+- PROBLEM 3: mặc dù chuyển toàn bộ request sang Redis và có thể phục vụ cho 1000 người dùng đồng thời, nhưng khi lên 10k, 100k thì chưa biết. Và vấn đề về Database Connection Limitation vẫn chưa giải quyết được. Cụ thể là trong app mình setup là có tối đa 10 kết nối tới database, nhưng liệu khi có 100 kết nối thì có chịu được không ??? Vấn đề này mình có thể giải quyết bằng việc bỏ các request vào trong Queue rồi xử lý từng cái, tuy nhiên thì có thể làm tăng thời gian phản hồi cho những người dùng request sau, nghĩa là người dùng thứ 1000 sẽ lâu hơn rất nhiều khi so với người dùng đầu tiên.

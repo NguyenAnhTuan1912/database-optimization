@@ -4,10 +4,10 @@ import { RedisManager } from "../../../db/RedisManager";
 import { getGeneralKey, resourceToKeyDict } from "../../../helpers";
 
 /**
- * Write cached quote to memory database.
+ * Write cached user to memory database.
  * @param ctx
  */
-export async function writeCachedQuote(ctx: RuntimeContext) {
+export async function writeCachedUser(ctx: RuntimeContext) {
   const params = (await ctx.getParams()) as any;
   const headers = (await ctx.getHeaders()) as any;
   const prevResult = ctx.prevResult as any;
@@ -17,7 +17,7 @@ export async function writeCachedQuote(ctx: RuntimeContext) {
 
   const redisClient = rm.getClient();
   const generalKey = getGeneralKey();
-  const resourceKey = resourceToKeyDict.quote(params.quoteId);
+  const resourceKey = resourceToKeyDict.user(params.userId);
 
   if (await redisClient.exists([generalKey, resourceKey])) {
     return prevResult;

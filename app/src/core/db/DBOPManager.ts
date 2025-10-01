@@ -35,6 +35,9 @@ export class DBOPManager extends DatabaseManager<
         password: this.password,
         port: this.port,
         connectionLimit: this.connectionLimit,
+        queueLimit: 0,
+        waitForConnections: true,
+        idleTimeout: 60000,
       }),
     });
 

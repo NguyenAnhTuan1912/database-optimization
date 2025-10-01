@@ -10,6 +10,10 @@ import { paginateUsers } from "../functions/paginate-users";
 import { createUser } from "../functions/create-user";
 import { updateUser } from "../functions/update-user";
 import { deleteUser } from "../functions/delete-user";
+import { getCachedUser } from "../functions/get-cached-user";
+import { getCachedUsers } from "../functions/get-cached-users";
+import { writeCachedUser } from "../functions/write-cached-user";
+import { writeCachedUsers } from "../functions/write-cached-users";
 import { checkUserIdInHeader } from "../../auth/functions/checkUserIdInHeader";
 
 // Import schema & validators
@@ -46,12 +50,16 @@ countUsersPipeline.addStep(count).addStep(Pipeline.processRuntimeResult);
 
 getUserPipeline
   .addStep(checkUserIdInHeader)
+  .addStep(getCachedUser)
   .addStep(getUser)
+  .addStep(writeCachedUser)
   .addStep(Pipeline.processRuntimeResult);
 
 paginateUserPipeline
   .addStep(checkUserIdInHeader)
+  .addStep(getCachedUsers)
   .addStep(paginateUsers)
+  .addStep(writeCachedUsers)
   .addStep(Pipeline.processRuntimeResult);
 
 createUserPipeline

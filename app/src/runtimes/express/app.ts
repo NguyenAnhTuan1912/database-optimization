@@ -34,13 +34,17 @@ app.use((req, res, next) => {
   const start = Date.now();
 
   res.on("finish", () => {
+    const userAgent = req.headers["user-agent"] || "Unknown";
     const duration = Date.now() - start;
-    const msg = `[${req.method}] ${req.originalUrl} - ${res.statusCode} (${duration}ms)`;
+    const statusCode = res.statusCode;
+
+    const msg = `[${req.method}] ${req.originalUrl} - ${statusCode} ${duration}ms ${userAgent}`;
 
     reqLogger.info(
       LoggerBuilder.buildNormalLog(msg, {
-        userAgent: req.headers["user-agent"] || "Unknown",
+        userAgent,
         duration,
+        statusCode,
       })
     );
   });

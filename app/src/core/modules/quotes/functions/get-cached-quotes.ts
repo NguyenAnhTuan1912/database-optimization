@@ -7,8 +7,8 @@ import { getGeneralKey, resourceToKeyDict } from "../../../helpers";
  * Get cached quote in memory database.
  * @param ctx
  */
-export async function getCachedQuote(ctx: RuntimeContext) {
-  const params = (await ctx.getParams()) as any;
+export async function getCachedQuotes(ctx: RuntimeContext) {
+  const query = (await ctx.getQuery()) as any;
   const headers = (await ctx.getHeaders()) as any;
   const rm = new RedisManager();
 
@@ -16,7 +16,7 @@ export async function getCachedQuote(ctx: RuntimeContext) {
 
   const redisClient = rm.getClient();
   const generalKey = getGeneralKey();
-  const resourceKey = resourceToKeyDict.quote(params.quoteId);
+  const resourceKey = resourceToKeyDict.quotes(query.page, query.size);
 
   const result = await redisClient.hGet(generalKey, resourceKey);
 

@@ -11,8 +11,9 @@ import { createQuote } from "../functions/create-quote";
 import { updateQuote } from "../functions/update-quote";
 import { deleteQuote } from "../functions/delete-quote";
 import { getCachedQuote } from "../functions/get-cached-quote";
+import { getCachedQuotes } from "../functions/get-cached-quotes";
 import { writeCachedQuote } from "../functions/write-cached-quote";
-import { checkUserIdInHeader } from "../../auth/functions/checkUserIdInHeader";
+import { writeCachedQuotes } from "../functions/write-cached-quotes";
 
 // Import schema & validators
 import { createValidationStepExecutor } from "../../../validation/joi/helper";
@@ -47,28 +48,19 @@ export const deleteQuotePipeline = new Pipeline<RuntimeContext>(
 countQuotesPipeline.addStep(count).addStep(Pipeline.processRuntimeResult);
 
 getQuotePipeline
-  .addStep(checkUserIdInHeader)
   .addStep(getCachedQuote)
   .addStep(getQuote)
   .addStep(writeCachedQuote)
   .addStep(Pipeline.processRuntimeResult);
 
 paginateQuotePipeline
-  .addStep(checkUserIdInHeader)
+  .addStep(getCachedQuotes)
   .addStep(paginateQuotes)
+  .addStep(writeCachedQuotes)
   .addStep(Pipeline.processRuntimeResult);
 
-createQuotePipeline
-  .addStep(checkUserIdInHeader)
-  .addStep(createQuote)
-  .addStep(Pipeline.processRuntimeResult);
+createQuotePipeline.addStep(createQuote).addStep(Pipeline.processRuntimeResult);
 
-updateQuotePipeline
-  .addStep(checkUserIdInHeader)
-  .addStep(updateQuote)
-  .addStep(Pipeline.processRuntimeResult);
+updateQuotePipeline.addStep(updateQuote).addStep(Pipeline.processRuntimeResult);
 
-deleteQuotePipeline
-  .addStep(checkUserIdInHeader)
-  .addStep(deleteQuote)
-  .addStep(Pipeline.processRuntimeResult);
+deleteQuotePipeline.addStep(deleteQuote).addStep(Pipeline.processRuntimeResult);

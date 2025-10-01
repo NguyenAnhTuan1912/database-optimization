@@ -7,8 +7,8 @@ import { getGeneralKey, resourceToKeyDict } from "../../../helpers";
  * Write cached quote to memory database.
  * @param ctx
  */
-export async function writeCachedQuote(ctx: RuntimeContext) {
-  const params = (await ctx.getParams()) as any;
+export async function writeCachedQuotes(ctx: RuntimeContext) {
+  const query = (await ctx.getQuery()) as any;
   const headers = (await ctx.getHeaders()) as any;
   const prevResult = ctx.prevResult as any;
   const rm = new RedisManager();
@@ -17,7 +17,7 @@ export async function writeCachedQuote(ctx: RuntimeContext) {
 
   const redisClient = rm.getClient();
   const generalKey = getGeneralKey();
-  const resourceKey = resourceToKeyDict.quote(params.quoteId);
+  const resourceKey = resourceToKeyDict.quotes(query.page, query.size);
 
   if (await redisClient.exists([generalKey, resourceKey])) {
     return prevResult;

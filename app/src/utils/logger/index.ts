@@ -103,9 +103,7 @@ export class LoggerBuilder {
             winston.format.timestamp(),
             winston.format.errors({ stack: true }), // để log cả stack trace
             winston.format.printf(({ level, message, timestamp, ...meta }) => {
-              return `${timestamp} [${level}]: ${message} ${
-                Object.keys(meta).length ? JSON.stringify(meta, null, 2) : ""
-              }`;
+              return `${timestamp} [${level}]: ${message}`;
             })
           ),
         })
@@ -211,7 +209,9 @@ export class LoggerBuilder {
       return this;
     }
 
-    let defaultFormatFn = jsonFormat;
+    let defaultFormatFn = winston.format.printf((log) => {
+      return JSON.stringify(log);
+    });
     let defaultLevel = this.rootLevel;
 
     // Check if has format
@@ -231,9 +231,9 @@ export class LoggerBuilder {
         LOG_ROOT,
         generateFilename(destination, defaultLevel)
       ),
-      format: combine(
-        label({ label: this.defaultLabel }),
-        timestamp(),
+      format: winston.format.combine(
+        winston.format.timestamp(),
+        winston.format.errors({ stack: true }),
         defaultFormatFn
       ),
     };
