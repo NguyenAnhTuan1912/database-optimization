@@ -6,3 +6,6 @@ FROM mysql:8.0.39
 COPY ./scripts/init.sql /docker-entrypoint-initdb.d/
 COPY ./scripts/create-user.sql /docker-entrypoint-initdb.d/
 COPY ./scripts/seed.sql /docker-entrypoint-initdb.d/
+
+# Config file
+COPY ./my.cnf /etc/mysql/my.cnf

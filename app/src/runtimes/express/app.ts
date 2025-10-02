@@ -18,7 +18,10 @@ import { usersRoutes } from "./routes/users/index.js";
 import { LoggerBuilder } from "../../utils/logger/index.js";
 
 const app = express();
-const reqLogger = new LoggerBuilder().to("requests").build();
+const reqLogger = new LoggerBuilder()
+  .to("requests")
+  .to("requests.error", { level: "error" })
+  .build();
 
 // Add global middlewares
 app.use(
@@ -40,13 +43,23 @@ app.use((req, res, next) => {
 
     const msg = `[${req.method}] ${req.originalUrl} - ${statusCode} ${duration}ms ${userAgent}`;
 
-    reqLogger.info(
-      LoggerBuilder.buildNormalLog(msg, {
-        userAgent,
-        duration,
-        statusCode,
-      })
-    );
+    if (statusCode >= 400) {
+      reqLogger.error(
+        LoggerBuilder.buildNormalLog(msg, {
+          userAgent,
+          duration,
+          statusCode,
+        })
+      );
+    } else {
+      reqLogger.info(
+        LoggerBuilder.buildNormalLog(msg, {
+          userAgent,
+          duration,
+          statusCode,
+        })
+      );
+    }
   });
 
   next();

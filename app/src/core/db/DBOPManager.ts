@@ -37,7 +37,8 @@ export class DBOPManager extends DatabaseManager<
         connectionLimit: this.connectionLimit,
         queueLimit: 0,
         waitForConnections: true,
-        idleTimeout: 60000,
+        idleTimeout: 30000,
+        connectTimeout: 5000,
       }),
     });
 

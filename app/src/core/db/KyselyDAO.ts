@@ -168,7 +168,11 @@ export abstract class KyselyBaseDAO<
       const msg = `Cannot find ${this.singularEntityName}.`;
 
       LoggerBuilder.Logger.error(
-        LoggerBuilder.buildNormalLog(msg, { reason: error.message })
+        LoggerBuilder.buildNormalLog(msg, {
+          reason: error.message,
+          at: "KyselyDAO.find",
+          path: "core/db/KyselyDAO",
+        })
       );
 
       if (options && options.canThrowError) {
@@ -191,7 +195,11 @@ export abstract class KyselyBaseDAO<
       const msg = `Cannot find ${this.pluralEntityName}.`;
 
       LoggerBuilder.Logger.error(
-        LoggerBuilder.buildNormalLog(msg, { reason: error.message })
+        LoggerBuilder.buildNormalLog(msg, {
+          reason: error.message,
+          at: "KyselyDAO.findAll",
+          path: "core/db/KyselyDAO",
+        })
       );
 
       if (options && options.canThrowError) {
@@ -217,7 +225,11 @@ export abstract class KyselyBaseDAO<
       const msg = `Cannot find ${this.pluralEntityName}.`;
 
       LoggerBuilder.Logger.error(
-        LoggerBuilder.buildNormalLog(msg, { reason: error.message })
+        LoggerBuilder.buildNormalLog(msg, {
+          reason: error.message,
+          at: "KyselyDAO.paginate",
+          path: "core/db/KyselyDAO",
+        })
       );
 
       if (options && options.canThrowError) {
@@ -252,7 +264,11 @@ export abstract class KyselyBaseDAO<
       const msg = `Cannot insert ${this.singularEntityName}.`;
 
       LoggerBuilder.Logger.error(
-        LoggerBuilder.buildNormalLog(msg, { reason: error.message })
+        LoggerBuilder.buildNormalLog(msg, {
+          reason: error.message,
+          at: "KyselyDAO.insert",
+          path: "core/db/KyselyDAO",
+        })
       );
 
       if (options && options.canThrowError) {
@@ -285,7 +301,11 @@ export abstract class KyselyBaseDAO<
       const msg = `Cannot update ${this.singularEntityName}.`;
 
       LoggerBuilder.Logger.error(
-        LoggerBuilder.buildNormalLog(msg, { reason: error.message })
+        LoggerBuilder.buildNormalLog(msg, {
+          reason: error.message,
+          at: "KyselyDAO.update",
+          path: "core/db/KyselyDAO",
+        })
       );
 
       if (options && options.canThrowError) {
@@ -317,7 +337,11 @@ export abstract class KyselyBaseDAO<
       const msg = `Cannot delete ${this.singularEntityName}.`;
 
       LoggerBuilder.Logger.error(
-        LoggerBuilder.buildNormalLog(msg, { reason: error.message })
+        LoggerBuilder.buildNormalLog(msg, {
+          reason: error.message,
+          at: "KyselyDAO.delete",
+          path: "core/db/KyselyDAO",
+        })
       );
 
       if (options && options.canThrowError) {
